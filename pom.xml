@@ -84,7 +84,7 @@
         <!-- dependencies -->
         <junit.version>4.12</junit.version>
         <plexus-component.version>1.7.1</plexus-component.version>
-        
+
         <!-- plugins/extensions -->
         <build-helper-maven.version>1.12</build-helper-maven.version>
         <clirr-maven.version>2.8</clirr-maven.version>
@@ -97,7 +97,6 @@
         <maven-clean.version>3.0.0</maven-clean.version>
         <maven-compiler.version>3.5.1</maven-compiler.version>
         <maven-deploy.version>2.8.2</maven-deploy.version>
-        <pgp-maven.version>1.1</pgp-maven.version>
         <maven-install.version>2.5.2</maven-install.version>
         <maven-jar.version>3.0.2</maven-jar.version>
         <maven-javadoc.version>2.10.4</maven-javadoc.version>
@@ -111,6 +110,7 @@
         <maven-source.version>3.0.1</maven-source.version>
         <maven-surefire.version>2.19.1</maven-surefire.version>
         <maven-s3-wagon.version>1.2.2</maven-s3-wagon.version>
+        <pgp-maven.version>1.1</pgp-maven.version>
         <versions-maven.version>2.3</versions-maven.version>
     </properties>
 
@@ -135,7 +135,7 @@
             <artifactId>pgp-maven-plugin</artifactId>
             <version>${pgp-maven.version}</version>
         </dependency>
-        
+
         <dependency>
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-component-annotations</artifactId>
