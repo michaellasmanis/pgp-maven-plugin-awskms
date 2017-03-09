@@ -30,7 +30,7 @@ import java.util.Map;
  * @author mpl
  */
 @Component(role=PassphraseLoader.class,hint="awskms")
-public class AwsKmsPassPhraseLoader
+public class AwsKmsPassphraseLoader
     extends PassphraseLoader
 {
     
@@ -43,7 +43,7 @@ public class AwsKmsPassPhraseLoader
     /**
      * Constructor
      */
-    public AwsKmsPassPhraseLoader()
+    public AwsKmsPassphraseLoader()
     {
         super();
     }
@@ -57,7 +57,7 @@ public class AwsKmsPassPhraseLoader
      * 
      * @param loaders the Map of loaders
      */
-    AwsKmsPassPhraseLoader(Map<String, PassphraseLoader> loaders)
+    AwsKmsPassphraseLoader(Map<String, PassphraseLoader> loaders)
     {
         super();
         this.loaders = loaders;

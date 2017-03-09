@@ -35,17 +35,17 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.MockitoJUnitRunner;
 
 /**
- * Unit tests for {@link AwsKmsPassPhraseLoader}
+ * Unit tests for {@link AwsKmsPassphraseLoader}
  * 
  * @author mpl
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AwsKmsPassPhraseLoaderTest 
+public class AwsKmsPassphraseLoaderTest 
 {
     /**
      * object under test
      */
-    private AwsKmsPassPhraseLoader instance;
+    private AwsKmsPassphraseLoader instance;
     
     /**
      * mock of loader for scheme "foo:"
@@ -92,7 +92,7 @@ public class AwsKmsPassPhraseLoaderTest
         l.put("foo", fooLoader);
         l.put("bar", barLoader);
         l.put("null", null);
-        this.instance = new AwsKmsPassPhraseLoader(l);
+        this.instance = new AwsKmsPassphraseLoader(l);
     }
     
     /**
@@ -131,12 +131,12 @@ public class AwsKmsPassPhraseLoaderTest
                 .isInstanceOf(MojoExecutionException.class);
 
         // empty the loader map, existing ones should fail now too
-        this.instance = new AwsKmsPassPhraseLoader(new HashMap<>());
+        this.instance = new AwsKmsPassphraseLoader(new HashMap<>());
         assertThatThrownBy(() -> {this.instance.load(null, null, "foo:bar");})
                 .isInstanceOf(MojoExecutionException.class);
 
         // null the loader map, existing ones should fail now too
-        this.instance = new AwsKmsPassPhraseLoader(null);
+        this.instance = new AwsKmsPassphraseLoader(null);
         assertThatThrownBy(() -> {this.instance.load(null, null, "foo:bar");})
                 .isInstanceOf(MojoExecutionException.class);
     }
