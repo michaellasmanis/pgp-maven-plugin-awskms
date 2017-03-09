@@ -82,7 +82,9 @@
         <copyright.email>michael@lasmanis.com</copyright.email>
 
         <!-- dependencies -->
+        <assertj.version>3.6.2</assertj.version>
         <junit.version>4.12</junit.version>
+        <mockito.version>2.7.15</mockito.version>
         <plexus-component.version>1.7.1</plexus-component.version>
 
         <!-- plugins/extensions -->
@@ -146,6 +148,20 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -237,13 +253,16 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc.version}</version>
                 <configuration>
-                    <show>private</show>
+                    <show>protected</show>
                     <nohelp>true</nohelp>
                     <fixTags>author,since,param,return,throws,link</fixTags>
                     <doctitle>${project.name} ${project.version}</doctitle>
                     <windowtitle>${project.name} ${project.version}</windowtitle>
                     <testDoctitle>${project.name} ${project.version} Tests</testDoctitle>
                     <testWindowtitle>${project.name} ${project.version} Tests</testWindowtitle>
+                    <links>
+                        <link>http://kohsuke.org/pgp-maven-plugin/apidocs/</link>
+                    </links>
                 </configuration>
                 <executions>
                     <execution>
@@ -461,11 +480,14 @@
                 <version>${maven-javadoc.version}</version>
                 <configuration>
                     <show>protected</show>
-                    <nohelp>false</nohelp>
+                    <nohelp>true</nohelp>
                     <doctitle>${project.name} ${project.version}</doctitle>
                     <windowtitle>${project.name} ${project.version}</windowtitle>
                     <testDoctitle>${project.name} ${project.version} Tests</testDoctitle>
                     <testWindowtitle>${project.name} ${project.version} Tests</testWindowtitle>
+                    <links>
+                        <link>http://kohsuke.org/pgp-maven-plugin/apidocs/</link>
+                    </links>
                 </configuration>
             </plugin>
             <plugin>

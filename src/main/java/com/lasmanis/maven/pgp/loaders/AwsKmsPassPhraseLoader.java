@@ -33,10 +33,36 @@ import java.util.Map;
 public class AwsKmsPassPhraseLoader
     extends PassphraseLoader
 {
-    // all the loaders that plexus knows about
+    
+    /**
+     * all the loaders that Plexus knows about
+     * */
     @Requirement(role=PassphraseLoader.class)
     private Map<String, PassphraseLoader> loaders;
-    
+
+    /**
+     * Constructor
+     */
+    public AwsKmsPassPhraseLoader()
+    {
+        super();
+    }
+
+    /**
+     * Constructor for unit testing
+     * 
+     * This constructors allows the map of loaders to
+     * be initialized by the test harness.  This is normally
+     * handled directly by Plexus.
+     * 
+     * @param loaders the Map of loaders
+     */
+    AwsKmsPassPhraseLoader(Map<String, PassphraseLoader> loaders)
+    {
+        super();
+        this.loaders = loaders;
+    }
+
     @Override
     public String load(
             PgpMojo pm, PGPSecretKey pgpsk, 
