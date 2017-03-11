@@ -15,6 +15,8 @@
  */
 package com.lasmanis.maven.pgp.loaders;
 
+import com.lasmanis.maven.pgp.loaders.helpers.AwsCryptoHelper;
+import com.lasmanis.maven.pgp.loaders.helpers.CryptoHelper;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.codehaus.plexus.component.annotations.Component;
@@ -33,7 +35,6 @@ import java.util.Map;
 public class AwsKmsPassphraseLoader
     extends PassphraseLoader
 {
-    
     /**
      * all the loaders that Plexus knows about
      * */
@@ -41,11 +42,17 @@ public class AwsKmsPassphraseLoader
     private Map<String, PassphraseLoader> loaders;
 
     /**
+     * Our crypto helper
+     */
+    private final CryptoHelper crypto;
+    
+    /**
      * Constructor
      */
     public AwsKmsPassphraseLoader()
     {
         super();
+        this.crypto = new AwsCryptoHelper();
     }
 
     /**
@@ -56,17 +63,22 @@ public class AwsKmsPassphraseLoader
      * handled directly by Plexus.
      * 
      * @param loaders the Map of loaders
+     * @param crypto the crypto helper
      */
-    AwsKmsPassphraseLoader(Map<String, PassphraseLoader> loaders)
+    AwsKmsPassphraseLoader(
+            final Map<String, PassphraseLoader> loaders,
+            final CryptoHelper crypto)
     {
         super();
         this.loaders = loaders;
+        this.crypto = crypto;
     }
 
     @Override
     public String load(
-            PgpMojo pm, PGPSecretKey pgpsk, 
-            String string) 
+            final PgpMojo pm, 
+            final PGPSecretKey pgpsk, 
+            final String string) 
             throws IOException, 
                 MojoExecutionException 
     {
@@ -74,6 +86,12 @@ public class AwsKmsPassphraseLoader
         if (string == null || string.isEmpty())
         {
             throw new MojoExecutionException("Scheme 'awskms:' expects an additional specifier.");
+        }
+
+        // make sure we have crypto support
+        if (this.crypto == null)
+        {
+            throw new MojoExecutionException("Failed to initialize the crypto library.");
         }
 
         // extract the scheme
@@ -99,6 +117,6 @@ public class AwsKmsPassphraseLoader
         String cipherText = loader.load(pm, pgpsk, string.substring(head+1));
         
         // decrypt the pass phrase
-        return cipherText;
+        return this.crypto.decrypt(cipherText);
     }
 }

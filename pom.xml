@@ -83,6 +83,7 @@
 
         <!-- dependencies -->
         <assertj.version>3.6.2</assertj.version>
+        <aws-java.version>1.11.102</aws-java.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.7.15</mockito.version>
         <plexus-component.version>1.7.1</plexus-component.version>
@@ -142,6 +143,12 @@
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-component-annotations</artifactId>
           <version>${plexus-component.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk</artifactId>
+          <version>${aws-java.version}</version>
         </dependency>
 
         <dependency>

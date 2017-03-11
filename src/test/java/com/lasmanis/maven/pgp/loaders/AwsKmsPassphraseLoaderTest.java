@@ -15,6 +15,7 @@
  */
 package com.lasmanis.maven.pgp.loaders;
 
+import com.lasmanis.maven.pgp.loaders.helpers.CryptoHelper;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -59,6 +60,12 @@ public class AwsKmsPassphraseLoaderTest
     @Mock
     private PassphraseLoader barLoader;
 
+    /**
+     * mock of the crypto helper
+     */
+    @Mock
+    private CryptoHelper crypto;
+    
     // test setup
 
     /**
@@ -83,8 +90,13 @@ public class AwsKmsPassphraseLoaderTest
     public void setUp() throws Exception {
         // setup our mocks
         when(this.fooLoader.load(any(), any(), anyString()))
-                .thenReturn("foo");
+                .thenReturn("oof");
         when(this.barLoader.load(any(), any(), anyString()))
+                .thenReturn("rab");
+        
+        when(this.crypto.decrypt("oof"))
+                .thenReturn("foo");
+        when(this.crypto.decrypt("rab"))
                 .thenReturn("bar");
         
         // setup our instance
@@ -92,7 +104,7 @@ public class AwsKmsPassphraseLoaderTest
         l.put("foo", fooLoader);
         l.put("bar", barLoader);
         l.put("null", null);
-        this.instance = new AwsKmsPassphraseLoader(l);
+        this.instance = new AwsKmsPassphraseLoader(l,this.crypto);
     }
     
     /**
@@ -131,12 +143,27 @@ public class AwsKmsPassphraseLoaderTest
                 .isInstanceOf(MojoExecutionException.class);
 
         // empty the loader map, existing ones should fail now too
-        this.instance = new AwsKmsPassphraseLoader(new HashMap<>());
+        this.instance = new AwsKmsPassphraseLoader(new HashMap<>(), this.crypto);
         assertThatThrownBy(() -> {this.instance.load(null, null, "foo:bar");})
                 .isInstanceOf(MojoExecutionException.class);
 
         // null the loader map, existing ones should fail now too
-        this.instance = new AwsKmsPassphraseLoader(null);
+        this.instance = new AwsKmsPassphraseLoader(null, this.crypto);
+        assertThatThrownBy(() -> {this.instance.load(null, null, "foo:bar");})
+                .isInstanceOf(MojoExecutionException.class);
+    }
+
+    /**
+     * Test failed crypto setup
+     */
+    @Test
+    public void testNullCrypto()
+    {
+        Map<String, PassphraseLoader> l = new HashMap<>();
+        l.put("foo", fooLoader);
+        l.put("bar", barLoader);
+        l.put("null", null);
+        this.instance = new AwsKmsPassphraseLoader(l,null);
         assertThatThrownBy(() -> {this.instance.load(null, null, "foo:bar");})
                 .isInstanceOf(MojoExecutionException.class);
     }
@@ -154,6 +181,8 @@ public class AwsKmsPassphraseLoaderTest
                 .isEqualTo("bar");
         
         verify(this.fooLoader).load(null, null, "bar");
+        verify(this.crypto).decrypt("oof");
         verify(this.barLoader).load(null, null, "foo");
+        verify(this.crypto).decrypt("rab");
     }
 }
