@@ -20,7 +20,7 @@ import com.amazonaws.services.kms.AWSKMSClientBuilder;
 import com.amazonaws.services.kms.model.DecryptRequest;
 import com.amazonaws.util.Base64;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
@@ -53,11 +53,18 @@ public class AwsCryptoHelper
         }
 
         // decrypt
-        AWSKMS kms = AWSKMSClientBuilder.defaultClient();
-        DecryptRequest req = new DecryptRequest().withCiphertextBlob(ByteBuffer.wrap(ciphertextBytes));
-        ByteBuffer plainText = kms.decrypt(req).getPlaintext();
-        String ret = new String(plainText.array(),Charset.defaultCharset());
+        try
+        {
+            AWSKMS kms = AWSKMSClientBuilder.defaultClient();
+            DecryptRequest req = new DecryptRequest().withCiphertextBlob(ByteBuffer.wrap(ciphertextBytes));
+            ByteBuffer plainText = kms.decrypt(req).getPlaintext();
+            String ret = new String(plainText.array(), StandardCharsets.UTF_8);
 
-        return ret;
+            return ret;
+        }
+        catch (final Exception ex)
+        {
+            throw new MojoExecutionException("Failed to decrypt cipherText", ex);
+        }
     }
 }
