@@ -73,10 +73,6 @@
         <scm-publish.pubScmUrl>scm:git:git@${repository.domain}:${repository.user}/${repository.name}.git</scm-publish.pubScmUrl>
         <scm-publish.siteDocOuputDirectory>${project.reporting.outputDirectory}</scm-publish.siteDocOuputDirectory>
 
-        <!-- signing -->
-        <pgp.secretkey>keyring:id=michael@lasmanis.com</pgp.secretkey>
-        <pgp.passphrase>gpg-agent:</pgp.passphrase>
-
         <!-- copyright -->
         <copyright.owner>Michael Lasmanis</copyright.owner>
         <copyright.email>michael@lasmanis.com</copyright.email>
@@ -576,10 +572,6 @@
                         <groupId>org.kohsuke</groupId>
                         <artifactId>pgp-maven-plugin</artifactId>
                         <version>${pgp-maven.version}</version>
-                        <configuration>
-                            <secretkey>${pgp.secretkey}</secretkey>
-                            <passphrase>${pgp.passphrase}</passphrase>
-                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
