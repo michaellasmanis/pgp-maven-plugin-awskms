@@ -20,7 +20,7 @@ You need to configure your pom.xml to add the pgp-maven-plugin-awskms as a depen
             <dependency>
                 <groupId>com.lasmanis</groupId>
                 <artifactId>pgp-maven-plugin-awskms</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.1</version>
             </dependency>
         </dependencies>
         <configuration>
