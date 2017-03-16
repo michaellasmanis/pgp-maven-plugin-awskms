@@ -4,7 +4,7 @@ AWS KMS support for pgp-maven-plugin
 Overview
 --------
 
-This plugin adds support to [pgp-maven-plugin] (http://kohsuke.org/pgp-maven-plugin/) for decrypting a pgp passphrase via [AWS Key Management Service](https://aws.amazon.com/kms/).  It wraps other
+This plugin adds support to [pgp-maven-plugin](http://kohsuke.org/pgp-maven-plugin/) for decrypting a pgp passphrase via [AWS Key Management Service](https://aws.amazon.com/kms/).  It wraps other
 passphrase loaders with KMS decryption.
 
 Usage
