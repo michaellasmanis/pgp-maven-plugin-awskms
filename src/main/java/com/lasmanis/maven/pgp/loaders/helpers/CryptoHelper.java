@@ -19,14 +19,14 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Interface for wrapping crypto libraries
- * 
+ *
  * @author mpl
  */
 public interface CryptoHelper 
 {
     /**
      * Decrypt the given cipherText
-     * 
+     *
      * @param cipherText the cipher text
      * @return the plain text
      * @throws org.apache.maven.plugin.MojoExecutionException on any error

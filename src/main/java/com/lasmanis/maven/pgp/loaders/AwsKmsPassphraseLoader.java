@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * Decryption wrapper for a pass phrase via AWS KMS
- * 
+ *
  * @author mpl
  */
 @Component(role=PassphraseLoader.class,hint="awskms")
@@ -75,6 +75,7 @@ public class AwsKmsPassphraseLoader
     }
 
     @Override
+    /** {@inheritDoc} */
     public String load(
             final PgpMojo pm, 
             final PGPSecretKey pgpsk, 

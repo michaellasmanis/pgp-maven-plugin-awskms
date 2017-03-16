@@ -97,7 +97,7 @@ public class AwsCryptoHelperTest
 
     /**
      * Test level initializer
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception on error
      */
     @Before
     public void setUp() throws Exception {
@@ -114,10 +114,9 @@ public class AwsCryptoHelperTest
     
     /**
      * test bad input
-     * @throws java.lang.Exception
      */
     @Test
-    public void testInput() throws Exception
+    public void testInput()
     {
         // setup our instance
         this.instance = new AwsCryptoHelper(this.kms);
@@ -141,7 +140,7 @@ public class AwsCryptoHelperTest
      * test kms exception
      */
     @Test
-    public void testKmsException() throws Exception
+    public void testKmsException()
     {
         // setup the mock
         when(this.kms.decrypt(any()))
@@ -155,7 +154,7 @@ public class AwsCryptoHelperTest
 
     /**
      * Let's check a Mocked decrypt
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception on error
      */
     @Test
     public void testMockedDecrypt() throws Exception

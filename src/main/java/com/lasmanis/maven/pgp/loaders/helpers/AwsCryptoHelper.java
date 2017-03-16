@@ -25,6 +25,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Wrapper around AWS Crypto library
+ *
  * @author mpl
  */
 public class AwsCryptoHelper 
@@ -53,6 +54,7 @@ public class AwsCryptoHelper
         this.client = client;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String decrypt(final String cipherText) 
             throws MojoExecutionException

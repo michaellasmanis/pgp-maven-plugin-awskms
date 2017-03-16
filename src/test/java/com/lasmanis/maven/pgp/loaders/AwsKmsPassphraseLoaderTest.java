@@ -84,7 +84,7 @@ public class AwsKmsPassphraseLoaderTest
 
     /**
      * Test level initializer
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception on error
      */
     @Before
     public void setUp() throws Exception {
@@ -170,7 +170,7 @@ public class AwsKmsPassphraseLoaderTest
 
     /**
      * Test basic operation
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception on error
      */
     @Test
     public void testBasicOperation() throws Exception
