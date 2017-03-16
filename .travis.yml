@@ -10,3 +10,7 @@ addons:
 
 jdk:
    - oraclejdk8
+
+after_success:
+  - test -e target/site/jacoco/jacoco.xml || echo "Code coverage failed"
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
