@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AwsKmsPassphraseLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AWS KMS support for pgp-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.lasmanis.maven.pgp.loaders</a> &gt; <span class="el_source">AwsKmsPassphraseLoader.java</span></div><h1>AwsKmsPassphraseLoader.java</h1><pre class="source lang-java linenums">/**
+ * Copyright © 2017 Michael Lasmanis (michael@lasmanis.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.lasmanis.maven.pgp.loaders;
+
+import com.lasmanis.maven.pgp.loaders.helpers.AwsCryptoHelper;
+import com.lasmanis.maven.pgp.loaders.helpers.CryptoHelper;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.bouncycastle.openpgp.PGPSecretKey;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
+import org.kohsuke.maven.pgp.PassphraseLoader;
+import org.kohsuke.maven.pgp.PgpMojo;
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ * Decryption wrapper for a pass phrase via AWS KMS
+ *
+ * @author mpl
+ */
+@Component(role=PassphraseLoader.class,hint=&quot;awskms&quot;)
+public class AwsKmsPassphraseLoader
+    extends PassphraseLoader
+{
+    /**
+     * all the loaders that Plexus knows about
+     * */
+    @Requirement(role=PassphraseLoader.class)
+    private Map&lt;String, PassphraseLoader&gt; loaders;
+
+    /**
+     * Our crypto helper
+     */
+    private final CryptoHelper crypto;
+    
+    /**
+     * Constructor
+     */
+    public AwsKmsPassphraseLoader()
+    {
+<span class="nc" id="L54">        super();</span>
+<span class="nc" id="L55">        this.crypto = new AwsCryptoHelper();</span>
+<span class="nc" id="L56">    }</span>
+
+    /**
+     * Constructor for unit testing
+     * 
+     * This constructors allows the map of loaders to
+     * be initialized by the test harness.  This is normally
+     * handled directly by Plexus.
+     * 
+     * @param loaders the Map of loaders
+     * @param crypto the crypto helper
+     */
+    AwsKmsPassphraseLoader(
+            final Map&lt;String, PassphraseLoader&gt; loaders,
+            final CryptoHelper crypto)
+    {
+<span class="fc" id="L72">        super();</span>
+<span class="fc" id="L73">        this.loaders = loaders;</span>
+<span class="fc" id="L74">        this.crypto = crypto;</span>
+<span class="fc" id="L75">    }</span>
+
+    @Override
+    /** {@inheritDoc} */
+    public String load(
+            final PgpMojo pm, 
+            final PGPSecretKey pgpsk, 
+            final String string) 
+            throws IOException, 
+                MojoExecutionException 
+    {
+        // check
+<span class="fc bfc" id="L87" title="All 4 branches covered.">        if (string == null || string.isEmpty())</span>
+        {
+<span class="fc" id="L89">            throw new MojoExecutionException(&quot;Scheme 'awskms:' expects an additional specifier.&quot;);</span>
+        }
+
+        // make sure we have crypto support
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (this.crypto == null)</span>
+        {
+<span class="fc" id="L95">            throw new MojoExecutionException(&quot;Failed to initialize the crypto library.&quot;);</span>
+        }
+
+        // extract the scheme
+<span class="fc" id="L99">        int head = string.indexOf(':');</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (head&lt;0)</span>
+        {
+<span class="fc" id="L102">            throw new MojoExecutionException(&quot;Invalid additional specifier. It needs to start with a scheme like 'FOO:': &quot; + string);</span>
+        }
+<span class="fc" id="L104">        String scheme = string.substring(0, head);</span>
+        
+        // get the loader
+<span class="fc" id="L107">        PassphraseLoader loader = null;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (this.loaders != null)</span>
+        {
+<span class="fc" id="L110">            loader = this.loaders.get(scheme);</span>
+        }
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (loader == null)</span>
+        {
+<span class="fc" id="L114">            throw new MojoExecutionException(&quot;Invalid passphrase scheme '&quot; + scheme + &quot;'. If this is your custom scheme, perhaps you forgot to specify it in &lt;dependency&gt; to this plugin?&quot;);            </span>
+        }
+
+        // get the cipherText
+<span class="fc" id="L118">        String cipherText = loader.load(pm, pgpsk, string.substring(head+1));</span>
+        
+        // decrypt the pass phrase
+<span class="fc" id="L121">        return this.crypto.decrypt(cipherText);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
