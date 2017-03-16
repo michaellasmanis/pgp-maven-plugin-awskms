@@ -15,18 +15,36 @@
  */
 package com.lasmanis.maven.pgp.loaders.helpers;
 
+import com.amazonaws.services.kms.AWSKMS;
+import com.amazonaws.services.kms.model.DecryptRequest;
+import com.amazonaws.services.kms.model.DecryptResult;
+import com.amazonaws.services.kms.model.KeyUnavailableException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import org.apache.maven.plugin.MojoExecutionException;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Unit tests for {@link AwsCryptoHelper}
  * 
  * @author mpl
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AwsCryptoHelperTest 
 {
     /**
@@ -34,6 +52,33 @@ public class AwsCryptoHelperTest
      */
     private AwsCryptoHelper instance;
 
+    /**
+     * Mock of aws client
+     */
+    @Mock
+    private AWSKMS kms;
+
+    /**
+     * arguement captor for AWSKMS.decrypt()
+     */
+    @Captor
+    ArgumentCaptor<DecryptRequest> kmsCaptor;
+
+    /**
+     * test cipher text (not really valid)
+     */
+    private final String cipherText = "Zm9vYmFy"; 
+
+    /**
+     * test plain text
+     */
+    private final String plainText = "foobar";
+
+    /**
+     * test cipher text (not really valid)
+     */
+    private final String exceptionText = "ZXhjZXB0aW9u"; 
+    
     // test setup
 
     /**
@@ -56,8 +101,8 @@ public class AwsCryptoHelperTest
      */
     @Before
     public void setUp() throws Exception {
-        // setup our instance
-        this.instance = new AwsCryptoHelper();
+        // setup our instance (don't use the mock)
+        this.instance = new AwsCryptoHelper(this.kms);
     }
     
     /**
@@ -68,17 +113,61 @@ public class AwsCryptoHelperTest
     }
     
     /**
-     * Let's decrypt
+     * test bad input
      * @throws java.lang.Exception
      */
     @Test
-    public void testDecrypt() throws Exception
+    public void testInput() throws Exception
     {
-        final String cipherText = "AQECAHh+bE1Ebnyge99AfEreXG/HlqwOTdAyDgovOIDUXjNwkQAAAGQwYgYJKoZIhvcNAQcGoFUwUwIBADBOBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDHiRkzaBC4ujWRSGNwIBEIAh9dU/UNEJUL9fT7odsrxgL2r34l0S6YbBzwo1biiNEp8q"; 
-        final String plainText = "foobar";
+        // setup our instance
+        this.instance = new AwsCryptoHelper(this.kms);
         
-        assertThat(this.instance.decrypt(cipherText))
-                .isEqualTo(plainText);
+        // null/blank cipher text
+        assertThatThrownBy(() -> {this.instance.decrypt(null);})
+                .isInstanceOf(MojoExecutionException.class);
+        assertThatThrownBy(() -> {this.instance.decrypt("");})
+                .isInstanceOf(MojoExecutionException.class);
 
+        // invalid cipherText
+        assertThatThrownBy(() -> {this.instance.decrypt(this.cipherText.substring(0, this.cipherText.length()-2));})
+                .isInstanceOf(MojoExecutionException.class);
+        assertThatThrownBy(() -> {this.instance.decrypt("*" + this.cipherText.substring(1));})
+                .isInstanceOf(MojoExecutionException.class);
+
+        verify(this.kms, times(0)).decrypt(any());
+    }
+
+    /**
+     * test kms exception
+     */
+    @Test
+    public void testKmsException() throws Exception
+    {
+        // setup the mock
+        when(this.kms.decrypt(any()))
+                .thenThrow(KeyUnavailableException.class);
+
+        assertThatThrownBy(() -> {this.instance.decrypt(this.cipherText);})
+                .isInstanceOf(MojoExecutionException.class);
+        verify(this.kms).decrypt(any());
+        
+    }
+
+    /**
+     * Let's check a Mocked decrypt
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testMockedDecrypt() throws Exception
+    {
+        // setup the mock
+        final DecryptResult dr = new DecryptResult();
+        dr.setPlaintext(ByteBuffer.wrap(this.plainText.getBytes(StandardCharsets.UTF_8)));
+        when(this.kms.decrypt(any()))
+                .thenReturn(dr);
+
+        assertThat(this.instance.decrypt(this.cipherText))
+                .isEqualTo(this.plainText);
+        verify(this.kms).decrypt(any());
     }
 }

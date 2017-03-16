@@ -30,6 +30,29 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class AwsCryptoHelper 
         implements CryptoHelper
 {
+    /**
+     * the aws client
+     */
+    private AWSKMS client;
+
+    /**
+     * Public constructor
+     */
+    public AwsCryptoHelper()
+    {
+        this.client = AWSKMSClientBuilder.defaultClient();
+    }
+
+    /**
+     * Constructor for unit testing
+     * 
+     * @param client aws client
+     */
+    AwsCryptoHelper(AWSKMS client)
+    {
+        this.client = client;
+    }
+
     @Override
     public String decrypt(final String cipherText) 
             throws MojoExecutionException
@@ -55,9 +78,8 @@ public class AwsCryptoHelper
         // decrypt
         try
         {
-            AWSKMS kms = AWSKMSClientBuilder.defaultClient();
             DecryptRequest req = new DecryptRequest().withCiphertextBlob(ByteBuffer.wrap(ciphertextBytes));
-            ByteBuffer plainText = kms.decrypt(req).getPlaintext();
+            ByteBuffer plainText = this.client.decrypt(req).getPlaintext();
             String ret = new String(plainText.array(), StandardCharsets.UTF_8);
 
             return ret;
