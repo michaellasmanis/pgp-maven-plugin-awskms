@@ -79,9 +79,9 @@
 
         <!-- dependencies -->
         <assertj.version>3.6.2</assertj.version>
-        <aws-java.version>1.11.102</aws-java.version>
+        <aws-java.version>1.11.105</aws-java.version>
         <junit.version>4.12</junit.version>
-        <mockito.version>2.7.15</mockito.version>
+        <mockito.version>2.7.17</mockito.version>
         <plexus-component.version>1.7.1</plexus-component.version>
 
         <!-- plugins/extensions -->
@@ -140,7 +140,7 @@
 
         <dependency>
           <groupId>com.amazonaws</groupId>
-          <artifactId>aws-java-sdk</artifactId>
+          <artifactId>aws-java-sdk-kms</artifactId>
           <version>${aws-java.version}</version>
         </dependency>
 
