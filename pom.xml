@@ -85,7 +85,6 @@
         <plexus-component.version>1.7.1</plexus-component.version>
 
         <!-- plugins/extensions -->
-        <!--<build-helper-maven.version>1.12</build-helper-maven.version>-->
         <clirr-maven.version>2.8</clirr-maven.version>
         <doxia-module-markdown.version>1.7</doxia-module-markdown.version>
         <exec-maven.version>1.5.0</exec-maven.version>
@@ -104,11 +103,9 @@
         <maven-project-info-reports.version>2.9</maven-project-info-reports.version>
         <maven-resources.version>3.0.1</maven-resources.version>
         <maven-scm-publish.version>1.1</maven-scm-publish.version>
-        <!--<maven-shade.version>2.4.3</maven-shade.version>-->
         <maven-site.version>3.5.1</maven-site.version>
         <maven-source.version>3.0.1</maven-source.version>
         <maven-surefire.version>2.19.1</maven-surefire.version>
-        <maven-s3-wagon.version>1.2.2</maven-s3-wagon.version>
         <pgp-maven.version>1.1</pgp-maven.version>
         <versions-maven.version>2.3</versions-maven.version>
     </properties>
@@ -382,50 +379,11 @@
                     <mainClass>${project.mainClass}</mainClass>
                 </configuration>
             </plugin>
-            <!--<plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>build-helper-maven-plugin</artifactId>
-              <version>${build-helper-maven.version}</version>
-              <executions>
-                <execution>
-                  <id>timestamp-property</id>
-                  <goals>
-                    <goal>timestamp-property</goal>
-                  </goals>
-                  <phase>validate</phase>
-                  <configuration>
-                    <name>current.year</name>
-                    <pattern>yyyy</pattern>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>${versions-maven.version}</version>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven-shade.version}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>true</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>${project.mainClass}</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-publish-plugin</artifactId>
@@ -462,13 +420,6 @@
               </executions>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>net.adamcin.org.kuali.maven.wagons</groupId>
-                <artifactId>maven-s3-wagon</artifactId>
-                <version>${maven-s3-wagon.version}</version>
-            </extension>
-        </extensions>
     </build>
 
     <reporting>
@@ -511,11 +462,8 @@
                 <configuration>
                     <linkXref>true</linkXref>
                     <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
                     <targetJdk>${target-java.version}</targetJdk>
-                    <excludeRoots>
-                        <excludeRoot>target/generated-sources/xjc</excludeRoot>
-                    </excludeRoots>
+                    <skipEmptyReport>false</skipEmptyReport>
                 </configuration>
             </plugin>
             <plugin>
@@ -527,6 +475,18 @@
                     <suppressionsLocation>checks/checkstyle-suppressions.xml</suppressionsLocation>
                     <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>
