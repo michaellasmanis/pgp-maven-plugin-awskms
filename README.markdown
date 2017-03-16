@@ -54,6 +54,11 @@ This lets you specify store the encrypted passphrase in the local filesystem.
 
 This lets you call any included PassphraseLoader configured in the pom (built-in and custom).
 
+AWS Credentials
+---------------
+
+Currently, the plugin uses the default credential handler from the aws-java-sdk.  Configuration and initialization priorities are described [here](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html).  The ability to supply credentials via the PASSPHRASE_SPECIFIER is coming in a future release.
+
 Documentation
 -------------
 
