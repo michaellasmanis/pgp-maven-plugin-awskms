@@ -26,7 +26,7 @@
     <packaging>jar</packaging>
 
     <name>AWS KMS support for pgp-maven-plugin</name>
-    <description>Extension supporting AWS KMS for decrypting key/pass phrases for pgp-maven-plugin</description>
+    <description>Extension supporting AWS KMS for decrypting a pgp passphrases for pgp-maven-plugin</description>
     <inceptionYear>2017</inceptionYear>
 
     <licenses>
