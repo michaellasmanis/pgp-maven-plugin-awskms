@@ -7,6 +7,7 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
+      - gnupg
 
 jdk:
    - oraclejdk8
