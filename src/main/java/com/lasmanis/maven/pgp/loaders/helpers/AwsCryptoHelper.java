@@ -34,7 +34,7 @@ public class AwsCryptoHelper
     /**
      * the aws client
      */
-    private AWSKMS client;
+    final private AWSKMS client;
 
     /**
      * Public constructor

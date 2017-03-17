@@ -21,12 +21,12 @@
 
     <groupId>com.lasmanis</groupId>
     <artifactId>pgp-maven-plugin-awskms</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <packaging>jar</packaging>
 
     <name>AWS KMS support for pgp-maven-plugin</name>
-    <description>Extension supporting AWS KMS for decrypting key/pass phrases for pgp-maven-plugin</description>
+    <description>Extension supporting AWS KMS for decrypting a pgp passphrases for pgp-maven-plugin</description>
     <inceptionYear>2017</inceptionYear>
 
     <licenses>
@@ -79,24 +79,25 @@
 
         <!-- dependencies -->
         <assertj.version>3.6.2</assertj.version>
-        <aws-java.version>1.11.102</aws-java.version>
+        <aws-java.version>1.11.105</aws-java.version>
         <junit.version>4.12</junit.version>
-        <mockito.version>2.7.15</mockito.version>
+        <mockito.version>2.7.17</mockito.version>
         <plexus-component.version>1.7.1</plexus-component.version>
 
         <!-- plugins/extensions -->
-        <!--<build-helper-maven.version>1.12</build-helper-maven.version>-->
         <clirr-maven.version>2.8</clirr-maven.version>
         <doxia-module-markdown.version>1.7</doxia-module-markdown.version>
         <exec-maven.version>1.5.0</exec-maven.version>
         <jacoco-maven.version>0.7.7.201606060606</jacoco-maven.version>
         <jgitflow-maven.version>1.0-m5.1</jgitflow-maven.version>
         <license-maven.version>3.0</license-maven.version>
+        <maven-changes.version>2.12.1</maven-changes.version>
         <maven-checkstyle.version>2.17</maven-checkstyle.version>
         <maven-clean.version>3.0.0</maven-clean.version>
         <maven-compiler.version>3.5.1</maven-compiler.version>
         <maven-deploy.version>2.8.2</maven-deploy.version>
         <maven-install.version>2.5.2</maven-install.version>
+        <maven-invoker.version>2.0.0</maven-invoker.version>
         <maven-jar.version>3.0.2</maven-jar.version>
         <maven-javadoc.version>2.10.4</maven-javadoc.version>
         <maven-jxr.version>2.5</maven-jxr.version>
@@ -104,11 +105,9 @@
         <maven-project-info-reports.version>2.9</maven-project-info-reports.version>
         <maven-resources.version>3.0.1</maven-resources.version>
         <maven-scm-publish.version>1.1</maven-scm-publish.version>
-        <!--<maven-shade.version>2.4.3</maven-shade.version>-->
         <maven-site.version>3.5.1</maven-site.version>
         <maven-source.version>3.0.1</maven-source.version>
         <maven-surefire.version>2.19.1</maven-surefire.version>
-        <maven-s3-wagon.version>1.2.2</maven-s3-wagon.version>
         <pgp-maven.version>1.1</pgp-maven.version>
         <versions-maven.version>2.3</versions-maven.version>
     </properties>
@@ -124,7 +123,7 @@
 
     <issueManagement>
         <url>https://${repository.domain}/${repository.user}/${repository.name}/issues</url>
-        <system>GitHub Issues</system>
+        <system>GitHub</system>
     </issueManagement>
 
 
@@ -143,7 +142,7 @@
 
         <dependency>
           <groupId>com.amazonaws</groupId>
-          <artifactId>aws-java-sdk</artifactId>
+          <artifactId>aws-java-sdk-kms</artifactId>
           <version>${aws-java.version}</version>
         </dependency>
 
@@ -338,12 +337,14 @@
                     <excludes>
                         <exclude>LICENSE</exclude>
                         <exclude>README.markdown</exclude>
-                        <exclude>it/build_at_test_com.public.gpg</exclude>
-                        <exclude>it/build_at_test_com.secret.asc</exclude>
+                        <exclude>src/it/basicTest/build_at_test_com.public.gpg</exclude>
+                        <exclude>src/it/basicTest/build_at_test_com.secret.asc</exclude>
+                        <exclude>src/site/markdown/*</exclude>
                     </excludes>
                     <mapping>
                         <markdown>DOUBLESLASH_STYLE</markdown>
                         <NOTICE>TEXT</NOTICE>
+                        <bsh>JAVADOC_STYLE</bsh>
                     </mapping>
                 </configuration>
                 <executions>
@@ -382,50 +383,11 @@
                     <mainClass>${project.mainClass}</mainClass>
                 </configuration>
             </plugin>
-            <!--<plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>build-helper-maven-plugin</artifactId>
-              <version>${build-helper-maven.version}</version>
-              <executions>
-                <execution>
-                  <id>timestamp-property</id>
-                  <goals>
-                    <goal>timestamp-property</goal>
-                  </goals>
-                  <phase>validate</phase>
-                  <configuration>
-                    <name>current.year</name>
-                    <pattern>yyyy</pattern>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>${versions-maven.version}</version>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven-shade.version}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>true</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>${project.mainClass}</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-publish-plugin</artifactId>
@@ -461,14 +423,37 @@
                 </execution>
               </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>${maven-invoker.version}</version>
+                <configuration>
+                    <projectsDirectory>src/it</projectsDirectory>
+                    <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                    <pomIncludes>
+                        <pomInclude>*/pom.xml</pomInclude>
+                    </pomIncludes>
+                    <preBuildHookScript>setup</preBuildHookScript>
+                    <postBuildHookScript>verify</postBuildHookScript>
+                    <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+                    <showErrors>true</showErrors>
+                    <settingsFile>src/it/settings.xml</settingsFile>
+                    <goals>
+                        <goal>clean</goal>
+                        <goal>verify</goal>
+                    </goals>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>install</goal>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>net.adamcin.org.kuali.maven.wagons</groupId>
-                <artifactId>maven-s3-wagon</artifactId>
-                <version>${maven-s3-wagon.version}</version>
-            </extension>
-        </extensions>
     </build>
 
     <reporting>
@@ -511,11 +496,8 @@
                 <configuration>
                     <linkXref>true</linkXref>
                     <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
                     <targetJdk>${target-java.version}</targetJdk>
-                    <excludeRoots>
-                        <excludeRoot>target/generated-sources/xjc</excludeRoot>
-                    </excludeRoots>
+                    <skipEmptyReport>false</skipEmptyReport>
                 </configuration>
             </plugin>
             <plugin>
@@ -527,6 +509,44 @@
                     <suppressionsLocation>checks/checkstyle-suppressions.xml</suppressionsLocation>
                     <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>${maven-changes.version}</version>
+                <configuration>
+                    <includeOpenIssues>false</includeOpenIssues>
+                    <onlyMilestoneIssues>false</onlyMilestoneIssues>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>github-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven-surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>${maven-invoker.version}</version>
             </plugin>
         </plugins>
     </reporting>

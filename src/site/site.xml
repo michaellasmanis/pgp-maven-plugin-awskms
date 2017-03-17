@@ -20,6 +20,8 @@
     <body>
         <menu name="Main">
             <item name="Overview" href="overview.html"/>
+            <item name="Usage" href="usage.html"/>
+            <item name="Setup" href="setup.html"/>
             <item name="License" href="license.html"/>
             <item name="API Docs" href="apidocs/index.html"/>
             <item name="Test Docs" href="testapidocs/index.html"/>

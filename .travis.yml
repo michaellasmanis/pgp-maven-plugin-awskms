@@ -1,0 +1,17 @@
+language: java
+script: mvn clean verify
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+      - gnupg
+
+jdk:
+   - oraclejdk8
+
+after_success:
+  - test -e target/site/jacoco/jacoco.xml || echo "Code coverage failed"
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
