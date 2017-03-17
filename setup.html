@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>AWS KMS support for pgp-maven-plugin &#x2013; Project Distribution Management</title>
+    <title>AWS KMS support for pgp-maven-plugin &#x2013; Generating the Cipher Text</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -46,8 +46,8 @@
                           <a href="usage.html" title="Usage">Usage</a>
             </li>
                   <li class="none">
-                          <a href="setup.html" title="Setup">Setup</a>
-            </li>
+            <strong>Setup</strong>
+          </li>
                   <li class="none">
                           <a href="license.html" title="License">License</a>
             </li>
@@ -60,44 +60,9 @@
           </ul>
                        <h5>Project Documentation</h5>
                   <ul>
-                                                                                                                                                                                                                                                                  <li class="expanded">
+                                                                                                                                                                                                                                                        <li class="collapsed">
                           <a href="project-info.html" title="Project Information">Project Information</a>
-                    <ul>
-                      <li class="none">
-                          <a href="dependencies.html" title="Dependencies">Dependencies</a>
-            </li>
-                      <li class="none">
-                          <a href="dependency-info.html" title="Dependency Information">Dependency Information</a>
-            </li>
-                      <li class="none">
-            <strong>Distribution Management</strong>
-          </li>
-                      <li class="none">
-                          <a href="index.html" title="About">About</a>
-            </li>
-                      <li class="none">
-                          <a href="issue-tracking.html" title="Issue Management">Issue Management</a>
-            </li>
-                      <li class="none">
-                          <a href="license.html" title="Licenses">Licenses</a>
-            </li>
-                      <li class="none">
-                          <a href="plugin-management.html" title="Plugin Management">Plugin Management</a>
-            </li>
-                      <li class="none">
-                          <a href="plugins.html" title="Plugins">Plugins</a>
-            </li>
-                      <li class="none">
-                          <a href="team-list.html" title="Team">Team</a>
-            </li>
-                      <li class="none">
-                          <a href="source-repository.html" title="Source Code Management">Source Code Management</a>
-            </li>
-                      <li class="none">
-                          <a href="project-summary.html" title="Summary">Summary</a>
-            </li>
-              </ul>
-        </li>
+                  </li>
                                                                                                                                                                                                                                                                           <li class="collapsed">
                           <a href="project-reports.html" title="Project Reports">Project Reports</a>
                   </li>
@@ -110,13 +75,18 @@
     </div>
     <div id="bodyColumn">
       <div id="contentBox">
-        <div class="section">
-<h2><a name="Overview"></a>Overview</h2><a name="Overview"></a>
-<p>The following is the distribution management information used by this project.</p>
-<div class="section">
-<h3><a name="Repository_-_sonatype-nexus-staging"></a>Repository - sonatype-nexus-staging</h3><a name="Repository_-_sonatype-nexus-staging"></a><a class="externalLink" href="https://oss.sonatype.org/service/local/staging/deploy/maven2/">https://oss.sonatype.org/service/local/staging/deploy/maven2/</a></div>
-<div class="section">
-<h3><a name="Snapshot_Repository_-_sonatype-nexus-snapshots"></a>Snapshot Repository - sonatype-nexus-snapshots</h3><a name="Snapshot_Repository_-_sonatype-nexus-snapshots"></a><a class="externalLink" href="https://oss.sonatype.org/content/repositories/snapshots/">https://oss.sonatype.org/content/repositories/snapshots/</a></div></div>
+        <h1>Generating the Cipher Text</h1>
+<p>You can use any KMS methods (API, CLI, etc) to generate the cipher text.</p>
+<p>Once you have generated a customer master key and add your IAM user as a user of that key, you can generate the cipher text. Using the <a class="externalLink" href="https://aws.amazon.com/cli/">AWS CLI</a> is the simplist method. The output from the following command is the ENCRYPTEDPASSPHRASE which can be read from a file (via scheme awskms:file:) or used directly (via scheme awskms:literal:):</p>
+
+<div class="source">
+<div class="source">
+<pre>aws kms encrypt --key-id arn:aws:kms:us-east-1:XXXXXXXXXXXX:key/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  --plaintext &quot;PASSPHRASE&quot; --output text --query CiphertextBlob
+</pre></div></div>
+<p>In the command above, replace PASSPHRASE with the passphrase for your key and make sure to replace the key-id arn (starts with arn:aws:kms&#x2026;..) with your key-id (available via the AWS console or CLI &#x2018;aws kms list-keys&#x2019;).</p>
+<p><b>NOTE: Do not use the cipher text generated by the <a class="externalLink" href="https://github.com/awslabs/aws-encryption-sdk-java">AWS Encryption SDK</a>. The cipher text generated is not directly compatible with the KMS service.</b></p>
+<h1>AWS Credentials</h1>
+<p>Currently, the plugin uses the default credential handler from the aws-java-sdk. Configuration and initialization priorities are described <a class="externalLink" href="http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html">here</a>. The ability to supply credentials via the PASSPHRASE_SPECIFIER is coming in a future release.</p>
       </div>
     </div>
     <div class="clear">
