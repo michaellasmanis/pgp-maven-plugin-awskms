@@ -338,6 +338,7 @@
                         <exclude>README.markdown</exclude>
                         <exclude>it/build_at_test_com.public.gpg</exclude>
                         <exclude>it/build_at_test_com.secret.asc</exclude>
+                        <exclude>src/site/markdown/*</exclude>
                     </excludes>
                     <mapping>
                         <markdown>DOUBLESLASH_STYLE</markdown>
