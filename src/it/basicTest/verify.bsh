@@ -1,0 +1,49 @@
+/**
+ * Copyright © 2017 Michael Lasmanis (michael@lasmanis.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+final String artifactId = "test";
+final String version = "0.0.1-SNAPSHOT";
+final String buildFile = "target/" + artifactId + "-" + version + ".pom";
+final String buildSig = buildFile + ".asc";
+final String publicKey = "build_at_test_com.public.gpg";
+
+// check file outputs
+File f = new File(basedir,buildFile);
+if (!f.exists())
+{
+    throw new FileNotFoundException("error: mvn failed: missing file " + f.getAbsolutePath());
+}
+File s = new File(basedir,buildSig);
+if (!s.exists())
+{
+    throw new FileNotFoundException("error: mvn failed: missing file " + s.getAbsolutePath());
+}
+File k = new File(basedir,publicKey);
+if (!k.exists())
+{
+    throw new FileNotFoundException("error: mvn failed: missing file " + k.getAbsolutePath());
+}
+
+// check sig
+String cmdString = "gpg --no-default-keyring --keyserver-options no-auto-key-retrieve --keyring " + k.getAbsolutePath() + " --verify " + s.getAbsolutePath();
+System.out.print("Verifying: " + cmdString + "\n");
+Process gpg = Runtime.getRuntime().exec(cmdString);
+if (gpg.waitFor() != 0)
+{
+    throw new UnsupportedOperationException("signature verification failed");
+}
+
+System.out.print("Success\n");
