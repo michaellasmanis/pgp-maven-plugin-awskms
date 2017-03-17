@@ -74,6 +74,8 @@ AWS Credentials
 
 Currently, the plugin uses the default credential handler from the aws-java-sdk.  Configuration and initialization priorities are described [here](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html).  The ability to supply credentials via the PASSPHRASE_SPECIFIER is coming in a future release.
 
+If you are running within the AWS infrastructure, it is highly recommended to use roles for managing access keys/secrets.  The combination of roles and this plugin eliminates the need to have plaintext signing secrets in a non-interactive build environment (like [CodePipeline](https://aws.amazon.com/codepipeline/)).
+
 Documentation
 -------------
 
