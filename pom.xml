@@ -91,6 +91,7 @@
         <jacoco-maven.version>0.7.7.201606060606</jacoco-maven.version>
         <jgitflow-maven.version>1.0-m5.1</jgitflow-maven.version>
         <license-maven.version>3.0</license-maven.version>
+        <maven-changes.version>2.12.1</maven-changes.version>
         <maven-checkstyle.version>2.17</maven-checkstyle.version>
         <maven-clean.version>3.0.0</maven-clean.version>
         <maven-compiler.version>3.5.1</maven-compiler.version>
@@ -121,7 +122,7 @@
 
     <issueManagement>
         <url>https://${repository.domain}/${repository.user}/${repository.name}/issues</url>
-        <system>GitHub Issues</system>
+        <system>GitHub</system>
     </issueManagement>
 
 
@@ -484,6 +485,22 @@
                     <reportSet>
                         <reports>
                             <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>${maven-changes.version}</version>
+                <configuration>
+                    <includeOpenIssues>false</includeOpenIssues>
+                    <onlyMilestoneIssues>false</onlyMilestoneIssues>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>github-report</report>
                         </reports>
                     </reportSet>
                 </reportSets>
