@@ -27,98 +27,96 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Decryption wrapper for a pass phrase via AWS KMS
+ * Decryption wrapper for a pass phrase via AWS KMS.
  *
  * @author mpl
  */
-@Component(role=PassphraseLoader.class,hint=&quot;awskms&quot;)
-public class AwsKmsPassphraseLoader
-    extends PassphraseLoader
-{
+@Component(role = PassphraseLoader.class, hint = &quot;awskms&quot;)
+public final class AwsKmsPassphraseLoader
+    extends PassphraseLoader {
     /**
-     * all the loaders that Plexus knows about
+     * all the loaders that Plexus knows about.
      * */
-    @Requirement(role=PassphraseLoader.class)
+    @Requirement(role = PassphraseLoader.class)
     private Map&lt;String, PassphraseLoader&gt; loaders;
 
     /**
-     * Our crypto helper
+     * Our crypto helper.
      */
     private final CryptoHelper crypto;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
-    public AwsKmsPassphraseLoader()
-    {
-<span class="nc" id="L54">        super();</span>
-<span class="nc" id="L55">        this.crypto = new AwsCryptoHelper();</span>
-<span class="nc" id="L56">    }</span>
+    public AwsKmsPassphraseLoader() {
+<span class="nc" id="L52">        super();</span>
+<span class="nc" id="L53">        this.crypto = new AwsCryptoHelper();</span>
+<span class="nc" id="L54">    }</span>
 
     /**
      * Constructor for unit testing
-     * 
+     *
      * This constructors allows the map of loaders to
      * be initialized by the test harness.  This is normally
      * handled directly by Plexus.
-     * 
+     *
      * @param loaders the Map of loaders
      * @param crypto the crypto helper
      */
     AwsKmsPassphraseLoader(
             final Map&lt;String, PassphraseLoader&gt; loaders,
-            final CryptoHelper crypto)
-    {
-<span class="fc" id="L72">        super();</span>
-<span class="fc" id="L73">        this.loaders = loaders;</span>
-<span class="fc" id="L74">        this.crypto = crypto;</span>
-<span class="fc" id="L75">    }</span>
+            final CryptoHelper crypto) {
+<span class="fc" id="L69">        super();</span>
+<span class="fc" id="L70">        this.loaders = loaders;</span>
+<span class="fc" id="L71">        this.crypto = crypto;</span>
+<span class="fc" id="L72">    }</span>
 
     @Override
     /** {@inheritDoc} */
     public String load(
-            final PgpMojo pm, 
-            final PGPSecretKey pgpsk, 
-            final String string) 
-            throws IOException, 
-                MojoExecutionException 
-    {
+            final PgpMojo pm,
+            final PGPSecretKey pgpsk,
+            final String string)
+            throws IOException,
+                MojoExecutionException {
         // check
-<span class="fc bfc" id="L87" title="All 4 branches covered.">        if (string == null || string.isEmpty())</span>
-        {
-<span class="fc" id="L89">            throw new MojoExecutionException(&quot;Scheme 'awskms:' expects an additional specifier.&quot;);</span>
+<span class="fc bfc" id="L83" title="All 4 branches covered.">        if (string == null || string.isEmpty()) {</span>
+<span class="fc" id="L84">            throw new MojoExecutionException(</span>
+                    &quot;Scheme 'awskms:' expects an additional specifier.&quot;);
         }
 
         // make sure we have crypto support
-<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (this.crypto == null)</span>
-        {
-<span class="fc" id="L95">            throw new MojoExecutionException(&quot;Failed to initialize the crypto library.&quot;);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (this.crypto == null) {</span>
+<span class="fc" id="L90">            throw new MojoExecutionException(</span>
+                    &quot;Failed to initialize the crypto library.&quot;);
         }
 
         // extract the scheme
-<span class="fc" id="L99">        int head = string.indexOf(':');</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (head&lt;0)</span>
-        {
-<span class="fc" id="L102">            throw new MojoExecutionException(&quot;Invalid additional specifier. It needs to start with a scheme like 'FOO:': &quot; + string);</span>
+<span class="fc" id="L95">        int head = string.indexOf(':');</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (head &lt; 0) {</span>
+<span class="fc" id="L97">            throw new MojoExecutionException(</span>
+                    &quot;Invalid additional specifier. It needs to start with a &quot;
+                    + &quot;scheme like 'FOO:': &quot; + string);
         }
-<span class="fc" id="L104">        String scheme = string.substring(0, head);</span>
-        
+<span class="fc" id="L101">        String scheme = string.substring(0, head);</span>
+
         // get the loader
-<span class="fc" id="L107">        PassphraseLoader loader = null;</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (this.loaders != null)</span>
-        {
-<span class="fc" id="L110">            loader = this.loaders.get(scheme);</span>
+<span class="fc" id="L104">        PassphraseLoader loader = null;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (this.loaders != null) {</span>
+<span class="fc" id="L106">            loader = this.loaders.get(scheme);</span>
         }
-<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (loader == null)</span>
-        {
-<span class="fc" id="L114">            throw new MojoExecutionException(&quot;Invalid passphrase scheme '&quot; + scheme + &quot;'. If this is your custom scheme, perhaps you forgot to specify it in &lt;dependency&gt; to this plugin?&quot;);            </span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (loader == null) {</span>
+<span class="fc" id="L109">            throw new MojoExecutionException(</span>
+                    &quot;Invalid passphrase scheme '&quot; + scheme
+                    + &quot;'. If this is your custom scheme, perhaps you forgot &quot;
+                    + &quot;to specify it in &lt;dependency&gt; to this plugin?&quot;);
         }
 
         // get the cipherText
-<span class="fc" id="L118">        String cipherText = loader.load(pm, pgpsk, string.substring(head+1));</span>
-        
+<span class="fc" id="L116">        String cipherText = loader.load(pm, pgpsk, string.substring(head + 1));</span>
+
         // decrypt the pass phrase
-<span class="fc" id="L121">        return this.crypto.decrypt(cipherText);</span>
+<span class="fc" id="L119">        return this.crypto.decrypt(cipherText);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
