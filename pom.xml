@@ -511,7 +511,6 @@
                 <configuration>
                     <enableRulesSummary>true</enableRulesSummary>
                     <suppressionsLocation>src/checkstyle/suppressions.xml</suppressionsLocation>
-                    <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
                 </configuration>
             </plugin>
             <plugin>
