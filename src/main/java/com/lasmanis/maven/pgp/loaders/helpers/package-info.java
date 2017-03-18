@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Helper classes
+ * Helper classes.
  */
 package com.lasmanis.maven.pgp.loaders.helpers;

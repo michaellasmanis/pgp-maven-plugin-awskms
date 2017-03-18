@@ -18,14 +18,13 @@ package com.lasmanis.maven.pgp.loaders.helpers;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Interface for wrapping crypto libraries
+ * Interface for wrapping crypto libraries.
  *
  * @author mpl
  */
-public interface CryptoHelper 
-{
+public interface CryptoHelper {
     /**
-     * Decrypt the given cipherText
+     * Decrypt the given cipherText.
      *
      * @param cipherText the cipher text
      * @return the plain text
