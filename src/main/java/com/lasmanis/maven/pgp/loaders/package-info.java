@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * AWS KMS support for pgp-maven-plugin
+ * AWS KMS support for pgp-maven-plugin.
  */
 package com.lasmanis.maven.pgp.loaders;
