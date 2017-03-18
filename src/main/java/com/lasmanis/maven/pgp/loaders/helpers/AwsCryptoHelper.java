@@ -24,71 +24,62 @@ import java.nio.charset.StandardCharsets;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
- * Wrapper around AWS Crypto library
+ * Wrapper around AWS Crypto library.
  *
  * @author mpl
  */
-public class AwsCryptoHelper 
-        implements CryptoHelper
-{
+public class AwsCryptoHelper
+        implements CryptoHelper {
     /**
-     * the aws client
+     * the aws client.
      */
     final private AWSKMS client;
 
     /**
-     * Public constructor
+     * Public constructor.
      */
-    public AwsCryptoHelper()
-    {
+    public AwsCryptoHelper() {
         this.client = AWSKMSClientBuilder.defaultClient();
     }
 
     /**
-     * Constructor for unit testing
-     * 
+     * Constructor for unit testing.
+     *
      * @param client aws client
      */
-    AwsCryptoHelper(AWSKMS client)
-    {
+    AwsCryptoHelper(final AWSKMS client) {
         this.client = client;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String decrypt(final String cipherText) 
-            throws MojoExecutionException
-    {
+    public String decrypt(final String cipherText)
+            throws MojoExecutionException {
         // check
-        if (cipherText == null || cipherText.isEmpty())
-        {
-            throw new MojoExecutionException("Empty cipherText.");            
-
+        if (cipherText == null || cipherText.isEmpty()) {
+            throw new MojoExecutionException("Empty cipherText.");
         }
 
         // parse the cipher text
         final byte[] ciphertextBytes;
-        try
-        {
+        try {
             ciphertextBytes = Base64.decode(cipherText);
-        } 
-        catch (final IllegalArgumentException ex) 
-        {
-            throw new MojoExecutionException("Invalid base 64 in cipherText", ex);
+        } catch (final IllegalArgumentException ex) {
+            throw new MojoExecutionException(
+                    "Invalid base 64 in cipherText", ex);
         }
 
         // decrypt
-        try
-        {
-            DecryptRequest req = new DecryptRequest().withCiphertextBlob(ByteBuffer.wrap(ciphertextBytes));
+        try {
+            DecryptRequest req = new DecryptRequest()
+                    .withCiphertextBlob(ByteBuffer.wrap(ciphertextBytes));
             ByteBuffer plainText = this.client.decrypt(req).getPlaintext();
             String ret = new String(plainText.array(), StandardCharsets.UTF_8);
 
             return ret;
-        }
-        catch (final Exception ex)
-        {
-            throw new MojoExecutionException("Failed to decrypt cipherText", ex);
+        } catch (final Exception ex) {
+            throw new MojoExecutionException(
+                    "Failed to decrypt cipherText", ex);
         }
     }
 }

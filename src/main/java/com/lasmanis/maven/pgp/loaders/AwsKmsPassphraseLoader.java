@@ -27,48 +27,45 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Decryption wrapper for a pass phrase via AWS KMS
+ * Decryption wrapper for a pass phrase via AWS KMS.
  *
  * @author mpl
  */
-@Component(role=PassphraseLoader.class,hint="awskms")
+@Component(role = PassphraseLoader.class, hint = "awskms")
 public class AwsKmsPassphraseLoader
-    extends PassphraseLoader
-{
+    extends PassphraseLoader {
     /**
-     * all the loaders that Plexus knows about
+     * all the loaders that Plexus knows about.
      * */
-    @Requirement(role=PassphraseLoader.class)
+    @Requirement(role = PassphraseLoader.class)
     private Map<String, PassphraseLoader> loaders;
 
     /**
-     * Our crypto helper
+     * Our crypto helper.
      */
     private final CryptoHelper crypto;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
-    public AwsKmsPassphraseLoader()
-    {
+    public AwsKmsPassphraseLoader() {
         super();
         this.crypto = new AwsCryptoHelper();
     }
 
     /**
      * Constructor for unit testing
-     * 
+     *
      * This constructors allows the map of loaders to
      * be initialized by the test harness.  This is normally
      * handled directly by Plexus.
-     * 
+     *
      * @param loaders the Map of loaders
      * @param crypto the crypto helper
      */
     AwsKmsPassphraseLoader(
             final Map<String, PassphraseLoader> loaders,
-            final CryptoHelper crypto)
-    {
+            final CryptoHelper crypto) {
         super();
         this.loaders = loaders;
         this.crypto = crypto;
@@ -77,46 +74,47 @@ public class AwsKmsPassphraseLoader
     @Override
     /** {@inheritDoc} */
     public String load(
-            final PgpMojo pm, 
-            final PGPSecretKey pgpsk, 
-            final String string) 
-            throws IOException, 
-                MojoExecutionException 
-    {
+            final PgpMojo pm,
+            final PGPSecretKey pgpsk,
+            final String string)
+            throws IOException,
+                MojoExecutionException {
         // check
-        if (string == null || string.isEmpty())
-        {
-            throw new MojoExecutionException("Scheme 'awskms:' expects an additional specifier.");
+        if (string == null || string.isEmpty()) {
+            throw new MojoExecutionException(
+                    "Scheme 'awskms:' expects an additional specifier.");
         }
 
         // make sure we have crypto support
-        if (this.crypto == null)
-        {
-            throw new MojoExecutionException("Failed to initialize the crypto library.");
+        if (this.crypto == null) {
+            throw new MojoExecutionException(
+                    "Failed to initialize the crypto library.");
         }
 
         // extract the scheme
         int head = string.indexOf(':');
-        if (head<0)
-        {
-            throw new MojoExecutionException("Invalid additional specifier. It needs to start with a scheme like 'FOO:': " + string);
+        if (head < 0) {
+            throw new MojoExecutionException(
+                    "Invalid additional specifier. It needs to start with a "
+                    + "scheme like 'FOO:': " + string);
         }
         String scheme = string.substring(0, head);
-        
+
         // get the loader
         PassphraseLoader loader = null;
-        if (this.loaders != null)
-        {
+        if (this.loaders != null) {
             loader = this.loaders.get(scheme);
         }
-        if (loader == null)
-        {
-            throw new MojoExecutionException("Invalid passphrase scheme '" + scheme + "'. If this is your custom scheme, perhaps you forgot to specify it in <dependency> to this plugin?");            
+        if (loader == null) {
+            throw new MojoExecutionException(
+                    "Invalid passphrase scheme '" + scheme
+                    + "'. If this is your custom scheme, perhaps you forgot "
+                    + "to specify it in <dependency> to this plugin?");
         }
 
         // get the cipherText
-        String cipherText = loader.load(pm, pgpsk, string.substring(head+1));
-        
+        String cipherText = loader.load(pm, pgpsk, string.substring(head + 1));
+
         // decrypt the pass phrase
         return this.crypto.decrypt(cipherText);
     }
