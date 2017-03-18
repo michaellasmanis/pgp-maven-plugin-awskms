@@ -110,6 +110,9 @@
         <maven-surefire.version>2.19.1</maven-surefire.version>
         <pgp-maven.version>1.1</pgp-maven.version>
         <versions-maven.version>2.3</versions-maven.version>
+        
+        <!-- checkstyle configuration -->
+        <checkstyle.config.location>src/checkstyle/sun_checks.xml</checkstyle.config.location>
     </properties>
 
     <url>https://${repository.domain}/${repository.user}/${repository.name}</url>
@@ -337,6 +340,7 @@
                     <excludes>
                         <exclude>LICENSE</exclude>
                         <exclude>README.markdown</exclude>
+                        <exclude>src/checkstyle/sun_checks.xml</exclude>
                         <exclude>src/it/basicTest/build_at_test_com.public.gpg</exclude>
                         <exclude>src/it/basicTest/build_at_test_com.secret.asc</exclude>
                         <exclude>src/site/markdown/*</exclude>
@@ -506,7 +510,7 @@
                 <version>${maven-checkstyle.version}</version>
                 <configuration>
                     <enableRulesSummary>true</enableRulesSummary>
-                    <suppressionsLocation>checks/checkstyle-suppressions.xml</suppressionsLocation>
+                    <suppressionsLocation>src/checkstyle/suppressions.xml</suppressionsLocation>
                     <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
                 </configuration>
             </plugin>

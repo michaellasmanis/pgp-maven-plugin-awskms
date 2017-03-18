@@ -28,12 +28,12 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author mpl
  */
-public class AwsCryptoHelper
+public final class AwsCryptoHelper
         implements CryptoHelper {
     /**
      * the aws client.
      */
-    final private AWSKMS client;
+    private final AWSKMS client;
 
     /**
      * Public constructor.

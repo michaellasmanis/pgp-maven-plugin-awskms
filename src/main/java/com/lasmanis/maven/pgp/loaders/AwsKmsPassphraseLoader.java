@@ -32,7 +32,7 @@ import java.util.Map;
  * @author mpl
  */
 @Component(role = PassphraseLoader.class, hint = "awskms")
-public class AwsKmsPassphraseLoader
+public final class AwsKmsPassphraseLoader
     extends PassphraseLoader {
     /**
      * all the loaders that Plexus knows about.
