@@ -21,7 +21,7 @@
 
     <groupId>com.lasmanis</groupId>
     <artifactId>pgp-maven-plugin-awskms</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 
     <packaging>jar</packaging>
 
@@ -58,7 +58,7 @@
     </prerequisites>
 
     <properties>
-        <maven.version>3.0</maven.version>
+        <maven.version>3.0.4</maven.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -108,12 +108,13 @@
         <maven-site.version>3.5.1</maven-site.version>
         <maven-source.version>3.0.1</maven-source.version>
         <maven-surefire.version>2.19.1</maven-surefire.version>
+        <mpl-checkstyle.version>0.0.1</mpl-checkstyle.version>
         <nexus-staging-maven.version>1.6.8</nexus-staging-maven.version>
         <pgp-maven.version>1.1</pgp-maven.version>
         <versions-maven.version>2.3</versions-maven.version>
         
         <!-- checkstyle configuration -->
-        <checkstyle.config.location>src/checkstyle/sun_checks.xml</checkstyle.config.location>
+        <checkstyle.config.location>checkstyle/mpl_checks.xml</checkstyle.config.location>
     </properties>
 
     <url>https://${repository.domain}/${repository.user}/${repository.name}</url>
@@ -341,7 +342,6 @@
                     <excludes>
                         <exclude>LICENSE</exclude>
                         <exclude>README.markdown</exclude>
-                        <exclude>src/checkstyle/sun_checks.xml</exclude>
                         <exclude>src/it/basicTest/build_at_test_com.public.gpg</exclude>
                         <exclude>src/it/basicTest/build_at_test_com.secret.asc</exclude>
                         <exclude>src/site/markdown/*</exclude>
@@ -426,6 +426,18 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.lasmanis</groupId>
+                        <artifactId>checkstyle-config</artifactId>
+                        <version>${mpl-checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
               <groupId>org.codehaus.plexus</groupId>
