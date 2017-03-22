@@ -20,6 +20,25 @@ final String buildFile = "target/" + artifactId + "-" + version + ".pom";
 final String buildSig = buildFile + ".asc";
 final String publicKey = "build_at_test_com.public.gpg";
 
+// find gpg
+String gpgPath = "";
+List binLocations = new ArrayList();
+binLocations.add("/usr/local/bin");
+binLocations.add("/usr/bin");
+for (String l : binLocations)
+{
+    File g = new File(l,"gpg");
+    if (g.canExecute())
+    {
+        gpgPath = g.getAbsolutePath();
+        break;
+    }
+}
+if (gpgPath.isEmpty())
+{
+    throw new FileNotFoundException("error: failed to locate gpg executable");
+}
+
 // check file outputs
 File f = new File(basedir,buildFile);
 if (!f.exists())
@@ -38,9 +57,15 @@ if (!k.exists())
 }
 
 // check sig
-String cmdString = "gpg --no-default-keyring --keyserver-options no-auto-key-retrieve --keyring " + k.getAbsolutePath() + " --verify " + s.getAbsolutePath();
-System.out.print("Verifying: " + cmdString + "\n");
-Process gpg = Runtime.getRuntime().exec(cmdString);
+StringBuilder cmdBuilder = new StringBuilder();
+cmdBuilder
+    .append(gpgPath)
+    .append(" --no-default-keyring --keyserver-options no-auto-key-retrieve --keyring ")
+    .append(k.getAbsolutePath())
+    .append(" --verify ")
+    .append(s.getAbsolutePath());
+System.out.print("Verifying: " + cmdBuilder.toString() + "\n");
+Process gpg = Runtime.getRuntime().exec(cmdBuilder.toString());
 if (gpg.waitFor() != 0)
 {
     throw new UnsupportedOperationException("signature verification failed");
