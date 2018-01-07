@@ -23,7 +23,7 @@ under the License.
     <link>https://github.com/michaellasmanis/pgp-maven-plugin-awskms</link>
     <description>AWS KMS support for pgp-maven-plugin - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2017 Michael Lasmanis</copyright>
+    <copyright>&#169;2017 - 2018 Michael Lasmanis</copyright>
     <item>
       <title>File: 5,
              Errors: 0,
