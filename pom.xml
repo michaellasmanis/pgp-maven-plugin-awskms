@@ -108,7 +108,7 @@
         <maven-site.version>3.7</maven-site.version>
         <maven-source.version>3.0.1</maven-source.version>
         <maven-surefire.version>2.20.1</maven-surefire.version>
-        <mpl-checkstyle.version>0.0.1</mpl-checkstyle.version>
+        <mpl-checkstyle.version>0.0.3</mpl-checkstyle.version>
         <nexus-staging-maven.version>1.6.8</nexus-staging-maven.version>
         <pgp-maven.version>1.1</pgp-maven.version>
         <versions-maven.version>2.5</versions-maven.version>
@@ -130,7 +130,6 @@
         <url>https://${repository.domain}/${repository.user}/${repository.name}/issues</url>
         <system>GitHub</system>
     </issueManagement>
-
 
     <dependencies>
         <dependency>
@@ -346,15 +345,17 @@
                         <exclude>LICENSE</exclude>
                         <exclude>nb-licenseheader.txt</exclude>
                         <exclude>README.markdown</exclude>
-                        <exclude>src/it/basicTest/build_at_test_com.public.gpg</exclude>
-                        <exclude>src/it/basicTest/build_at_test_com.secret.asc</exclude>
                         <exclude>src/site/markdown/*</exclude>
+                        <exclude>.vagrant/**</exclude>
+                        <exclude>**/*.gpg</exclude>
+                        <exclude>**/*.asc</exclude>
                     </excludes>
                     <mapping>
                         <markdown>DOUBLESLASH_STYLE</markdown>
                         <NOTICE>TEXT</NOTICE>
                         <copyright>TEXT</copyright>
                         <bsh>JAVADOC_STYLE</bsh>
+                        <Vagrantfile>SCRIPT_STYLE</Vagrantfile>
                     </mapping>
                 </configuration>
                 <executions>
@@ -542,7 +543,7 @@
                 <version>${maven-checkstyle.version}</version>
                 <configuration>
                     <enableRulesSummary>true</enableRulesSummary>
-                    <suppressionsLocation>src/checkstyle/suppressions.xml</suppressionsLocation>
+                    <suppressionsLocation>src/main/resources/checkstyle/suppressions.xml</suppressionsLocation>
                 </configuration>
             </plugin>
             <plugin>
