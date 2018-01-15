@@ -21,7 +21,7 @@
 
     <groupId>com.lasmanis</groupId>
     <artifactId>pgp-maven-plugin-awskms</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.7</version>
 
     <packaging>jar</packaging>
 
