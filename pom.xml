@@ -21,7 +21,7 @@
 
     <groupId>com.lasmanis</groupId>
     <artifactId>pgp-maven-plugin-awskms</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 
     <packaging>jar</packaging>
 
@@ -180,26 +180,6 @@
             </resource>
         </resources>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>${maven-site.version}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.maven.doxia</groupId>
-                            <artifactId>doxia-module-markdown</artifactId>
-                            <version>${doxia-module-markdown.version}</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <skipDeploy>true</skipDeploy>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
@@ -304,6 +284,9 @@
                         <version>${doxia-module-markdown.version}</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
