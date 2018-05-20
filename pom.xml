@@ -89,7 +89,7 @@
         <doxia-module-markdown.version>1.8</doxia-module-markdown.version>
         <exec-maven.version>1.6.0</exec-maven.version>
         <jacoco-maven.version>0.8.0</jacoco-maven.version>
-        <jgitflow-maven.version>1.0-m5.1</jgitflow-maven.version>
+        <jgitflow-maven.version>1.0.0-rc-1</jgitflow-maven.version>
         <license-maven.version>3.0</license-maven.version>
         <maven-changes.version>2.12.1</maven-changes.version>
         <maven-checkstyle.version>2.17</maven-checkstyle.version>
@@ -182,7 +182,7 @@
 
         <plugins>
             <plugin>
-                <groupId>external.atlassian.jgitflow</groupId>
+                <groupId>io.ultreia.java4all.jgitflow</groupId>
                 <artifactId>jgitflow-maven-plugin</artifactId>
                 <version>${jgitflow-maven.version}</version>
                 <configuration>
@@ -455,6 +455,9 @@
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                     <showErrors>true</showErrors>
                     <settingsFile>src/it/settings.xml</settingsFile>
+                    <environmentVariables>
+                        <AWS_PROFILE>pgp-maven-plugin-awskms</AWS_PROFILE>
+                    </environmentVariables>
                     <goals>
                         <goal>clean</goal>
                         <goal>verify</goal>
