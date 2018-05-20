@@ -455,6 +455,9 @@
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                     <showErrors>true</showErrors>
                     <settingsFile>src/it/settings.xml</settingsFile>
+                    <environmentVariables>
+                        <AWS_PROFILE>pgp-maven-plugin-awskms</AWS_PROFILE>
+                    </environmentVariables>
                     <goals>
                         <goal>clean</goal>
                         <goal>verify</goal>
